@@ -1,0 +1,155 @@
+package com.ita.softserveinc.achiever.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.google.common.base.Objects;
+
+/**
+ *
+ */
+@Entity
+@Table(name = "TOPICS")
+@NamedQueries({
+		@NamedQuery(name = "Topic.findAll", query = "SELECT t FROM Topic t"),
+		@NamedQuery(name = "Topic.findByName", query = "SELECT t FROM Topic t WHERE t.topicName = :name"), })
+public class Topic extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 804553713833686970L;
+
+	@Column(name = "NAME", unique = true, nullable = false)
+	private String topicName;
+
+	@OneToMany(mappedBy = "topic", orphanRemoval = true)
+	private Set<Subtopic> subtopics = new HashSet<Subtopic>();
+
+	@ManyToMany(mappedBy = "topics", fetch = FetchType.EAGER)
+	private Set<Direction> directions = new HashSet<Direction>();
+
+	/**
+	 * 
+	 */
+	public Topic() {
+
+	}
+
+	/**
+	 * @param topicName
+	 */
+	public Topic(String topicName) {
+		super();
+		this.topicName = topicName;
+	}
+
+	/**
+	 * 
+	 * @param topicName
+	 * @param directions
+	 */
+	public Topic(String topicName, Set<Direction> directions) {
+		super();
+		this.topicName = topicName;
+		this.directions = directions;
+	}
+
+	/**
+	 * @param subtopics
+	 *            the subtopics to set
+	 */
+	public void addSubtopics(Set<Subtopic> subtopics) {
+		this.subtopics.addAll(subtopics);
+	}
+
+	/**
+	 * @param subtopic
+	 *            the subtopic to set
+	 */
+	public void addSubtopic(Subtopic subtopic) {
+		this.subtopics.add(subtopic);
+	}
+
+	/**
+	 * @param direction
+	 */
+	public void addDirection(Direction direction) {
+		this.directions.add(direction);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.topicName);
+	}
+
+	/**
+	 * @return the topicName
+	 */
+	public String getTopicName() {
+		return topicName;
+	}
+
+	/**
+	 * @param topicName
+	 *            the topicName to set
+	 */
+	public void setTopicName(String topicName) {
+		this.topicName = topicName;
+	}
+
+	/**
+	 * @return the subtopics
+	 */
+	public Set<Subtopic> getSubtopics() {
+		return subtopics;
+	}
+
+	/**
+	 * @param subtopics
+	 *            the subtopics to set
+	 */
+	public void setSubtopics(Set<Subtopic> subtopics) {
+		this.subtopics = subtopics;
+	}
+
+	/**
+	 * @return the directions
+	 */
+	public Set<Direction> getDirections() {
+		return directions;
+	}
+
+	/**
+	 * @param directions
+	 *            the directions to set
+	 */
+	public void setDirections(Set<Direction> directions) {
+		this.directions = directions;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Topic other = (Topic) obj;
+		return Objects.equal(this.topicName, other.topicName);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("name", this.topicName)
+				.add("direction", this.directions).toString();
+	}
+}

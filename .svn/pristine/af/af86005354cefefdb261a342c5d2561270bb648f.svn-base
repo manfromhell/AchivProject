@@ -1,0 +1,162 @@
+package com.ita.softserveinc.achiever.entity;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.google.common.base.Objects;
+
+/**
+ * @author Taras Hrytsko
+ */
+
+@NamedQueries({
+		@NamedQuery(name = "Question.findBySubtopic", query = "SELECT q FROM Question q WHERE q.subtopic = :subtopic"),
+		@NamedQuery(name = "Question.findByName", query = "SELECT q FROM Question q WHERE q.name = :name") })
+@Entity
+@Table(name = "QUESTIONS")
+public class Question extends BaseEntity {
+
+	private static final long serialVersionUID = -5801723710274520852L;
+
+	/**
+	 * question body
+	 */
+	@Column(name = "NAME", nullable = false, updatable = true)
+	private String name;
+
+	@OneToMany(mappedBy = "question", orphanRemoval = true)
+	private List<UserAnswer> userAnswers;
+
+	@ManyToOne
+	@JoinColumn(name = "SUBTOPIC_ID")
+	private Subtopic subtopic;
+	
+	@OneToMany(mappedBy = "question", orphanRemoval = true)
+	private List<Answer> answers;
+	
+	public Question() {
+	}
+	
+	/**
+	 * 
+	 * @param question
+	 * @param correctAnswer
+	 * @param subtopic
+	 */
+	public Question(String name, String correctAnswer, Subtopic subtopic) {
+		super();
+		this.name = name;
+		this.subtopic = subtopic;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the userAnswers
+	 */
+	public List<UserAnswer> getUserAnswers() {
+		return Collections.unmodifiableList(userAnswers);
+	}
+
+	/**
+	 * @param userAnswers the userAnswers to set
+	 */
+	public void setUserAnswers(List<UserAnswer> userAnswers) {
+		this.userAnswers = userAnswers;
+	}
+
+	/**
+	 * @return the subtopic
+	 */
+	public Subtopic getSubtopic() {
+		return subtopic;
+	}
+
+	/**
+	 * @param subtopic the subtopic to set
+	 */
+	public void setSubtopic(Subtopic subtopic) {
+		this.subtopic = subtopic;
+	}
+
+	/**
+	 * @return the answers
+	 */
+	public List<Answer> getAnswers() {
+//		return Collections.unmodifiableList(answers);
+		return answers;
+	}
+
+	/**
+	 * @param answers the answers to set
+	 */
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+
+
+	/**
+	 * 
+	 * @param answer
+	 */
+	public void addAnswer(UserAnswer answer) {
+		this.userAnswers.add(answer);
+	}
+
+	public void addAnswer(Answer answer) {
+		this.answers.add(answer);
+	}
+
+	public void deleteAnswer(Answer answer) {
+		this.answers.remove(answer);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.subtopic, this.name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Question)) {
+			return false;
+		}
+		if (this == obj) {
+			return true;
+		}
+		Question that = (Question) obj;
+		return Objects.equal(this.subtopic, that.subtopic)
+				&& Objects.equal(this.name, that.name);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", this.getId())
+				.add("name", this.name).toString();
+	}
+}

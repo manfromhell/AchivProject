@@ -1,0 +1,256 @@
+package com.ita.softserveinc.achiever.entity;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.google.common.base.Objects;
+import com.ita.softserveinc.achiever.tool.UserVerification;
+
+/**
+ * 
+ * @author Bogdan Rudka
+ */
+
+@NamedQueries({
+		@NamedQuery(name = "User.getByLogin", query = "SELECT t FROM User t WHERE t.login = :login"),
+		@NamedQuery(name = "User.getByEmail", query = "SELECT t FROM User t WHERE t.email = :email"),
+		@NamedQuery(name = "User.getAllByRole", query = "SELECT t FROM User t WHERE t.role = :role"),
+// @NamedQuery(name = "User.getByActiveAndStudentCount", query =
+// "SELECT t FROM User t WHERE t.active = :active AND t.studentCount = :studentCount ")
+})
+@Entity
+@Table(name = "USERS")
+public class User extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "FIRST_NAME")
+	private String firstName;
+
+	@Column(name = "LAST_NAME")
+	private String lastName;
+
+	@Basic(optional = false)
+	@Column(name = "LOGIN", unique = true, nullable = false, updatable = false)
+	// @Pattern(regexp = UserDataVerification.LOGIN_PATTERN)
+	private String login;
+
+	@Column(name = "PASSWORD", nullable = false)
+
+	@Size(min = 6, max = 20, message =
+	"The password must be at least 6 characters long.")
+	// @Pattern(regexp = UserDataVerification.PASSWORD_PATTERN)
+	private String password;
+
+	@Transient
+	private String confirmPassword;
+
+	@Column(name = "EMAIL", unique = true, nullable = false)
+	@Pattern(regexp = UserVerification.EMAIL_PATTERN)
+
+	private String email;
+
+	@ManyToOne
+	/* (optional = false) */
+	@JoinColumn(name = "ROLE")
+	private Role role;
+
+	@ManyToOne
+	@JoinColumn(name = "GROUP_ID")
+	private Group group;
+
+	@Column(name = "ACTIVE", nullable = false)
+	private int active;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<QuizResult> results;
+
+	public User() {
+		this.active = 0;
+	}
+
+	public User(String login, String password, String email, Role role) {
+		super();
+		this.login = login;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.active = 0;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName
+	 *            the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the login
+	 */
+	public String getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login
+	 *            the login to set
+	 */
+	public void setLogin(String login) {
+
+		this.login = login;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+
+		this.password = password;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+
+		this.email = email;
+	}
+
+	/**
+	 * @return group - where user is in
+	 */
+	public Group getGroup() {
+		return group;
+	}
+
+	/**
+	 * @param group
+	 *            - set new group
+	 */
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public List<QuizResult> getResults() {
+		return Collections.unmodifiableList(this.results);
+	}
+
+	public void setResults(List<QuizResult> results) {
+		this.results = results;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public Role getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role
+	 *            the role to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public int getActive() {
+		return active;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.login);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof User)) {
+			return false;
+		}
+		final User other = (User) obj;
+		return Objects.equal(this.login, other.login);
+	}
+
+	@Override
+	public String toString() {
+
+		return Objects.toStringHelper(this).add("login", this.login)
+				.add("first name", this.firstName)
+				.add("last name", this.lastName).add("email", this.email)
+				.add("role", this.role.getType()).toString();
+
+	}
+
+}

@@ -1,0 +1,21 @@
+package com.ita.softserveinc.achiever.dao;
+
+import org.springframework.stereotype.Repository;
+
+import com.ita.softserveinc.achiever.entity.QuizResult;
+
+/**
+ * 
+ * 
+ * @author Kopaev Eugene
+ *
+ */
+
+@Repository
+public class QuizResultDaoImpl extends GenericDaoImpl<QuizResult> implements
+		IQuizResultDao {
+
+	public QuizResultDaoImpl() {
+		super();
+	}
+}

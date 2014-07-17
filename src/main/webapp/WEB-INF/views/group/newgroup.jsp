@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<!DOCTYPE html>
+<style>
+<%@include file='/WEB-INF/css/form_style.css'%>
+</style>
+<tiles:insertDefinition name="defaultTemplate">
+	<tiles:putAttribute name="body">
+
+		<div class="body">
+	<form:form class="form-container" method="post" action="addGroup"
+		commandName="group">
+		<div class="form-title">
+					<h3><spring:message code="label.newgroup" /></h3>
+				</div>
+			<div class="form-title">
+					<form:label path="groupName">
+						<spring:message code="label.name" />
+					</form:label>
+					<form:errors  path="groupName"  style="color: red;"></form:errors>
+					<form:errors  path="direction.groups"  style="color: red;"></form:errors>
+				<form:input class="form-field" path="groupName"/>
+			<form:label path="start"><spring:message code="label.start" /></form:label>
+			<form:errors  path="start"  style="color: red;">Wrong date!</form:errors>
+			<form:input class="form-field" path="start"/>
+			
+			<form:label path="end"><spring:message code="label.finish" /></form:label>
+			<form:errors  path="end"  style="color: red;">Wrong date!</form:errors>
+			<form:input class="form-field" path="end"/>
+				
+			<form:label path="direction">
+						<spring:message code="label.direction" />
+					</form:label>
+			
+				<form:select path="direction" items="${directionList}" itemLabel="name" itemValue="name">
+					</form:select>
+			</div>
+			<div class="submit-container">
+				<input class="submit-button" type="submit" id="newgroup"
+					value="<spring:message code="label.add"/>" />
+		 </div>
+	</form:form>
+	
+</div>
+
+	</tiles:putAttribute>
+</tiles:insertDefinition>

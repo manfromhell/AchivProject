@@ -1,0 +1,62 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ita.softserveinc.achiever.dao.IQuizResultDao;
+import com.ita.softserveinc.achiever.dao.IUserDao;
+import com.ita.softserveinc.achiever.entity.QuizResult;
+import com.ita.softserveinc.achiever.entity.User;
+/**
+ * @author Ruslan Didyk
+ */
+@Service
+public class QuizResultServiceImpl implements IQuizResultService{
+	
+	@Autowired
+	private IQuizResultDao quizResultDao;
+	
+	@Autowired
+	private IUserDao userDao;
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void create(QuizResult entity) {
+		quizResultDao.create(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public QuizResult update(QuizResult entity) {
+		return quizResultDao.update(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void delete(QuizResult entity) {
+		quizResultDao.delete(entity);
+	}
+
+	public QuizResult findById(Long id) {
+		return quizResultDao.findById(QuizResult.class, id);
+	}
+
+	public List<QuizResult> findAll() {
+		return quizResultDao.findAll(QuizResult.class);
+	}
+
+	@Override
+	public List<QuizResult> findAllByUser(String login) {
+		User user = userDao.findByLogin(login);
+		List<QuizResult> quizResults = quizResultDao.findByUser(user);
+		return quizResults;
+	}
+
+	@PreAuthorize(value = "#quizResult.user.login == authentication.name")
+	public QuizResult findOne(@P("quizResult") QuizResult quizResult) {
+		return quizResultDao.findById(QuizResult.class, quizResult.getId());
+	}
+}

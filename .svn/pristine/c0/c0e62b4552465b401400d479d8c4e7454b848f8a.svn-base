@@ -1,0 +1,80 @@
+package com.ita.softserveinc.achiever.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.google.common.base.Objects;
+
+/**
+ * @author Ruslan Didyk
+ */
+@Entity
+@Table(name = "ANSWERS")
+public class Answer extends BaseEntity {
+	
+	private static final long serialVersionUID = 171077558751171399L;
+
+	@Column(name = "NAME")
+	private String name;
+
+	@Column(name = "IS_CORRECT")
+	private Boolean isCorrect;
+
+	@ManyToOne
+	@JoinColumn(name = "QUESTION_ID")
+	private Question question;
+
+	public Answer() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getIsCorrect() {
+		return isCorrect;
+	}
+
+	public void setIsCorrect(Boolean isCorrect) {
+		this.isCorrect = isCorrect;
+	}
+
+	public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.name, this.question);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Answer that = (Answer) obj;
+		return Objects.equal(this.name, that.name)
+				&& Objects.equal(this.question, that.question);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("name", this.name)
+				.add("question", this.question.getName()).toString();
+	}
+}

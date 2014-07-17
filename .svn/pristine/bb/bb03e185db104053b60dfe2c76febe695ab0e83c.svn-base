@@ -1,0 +1,47 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ita.softserveinc.achiever.dao.IQuestionDao;
+import com.ita.softserveinc.achiever.entity.Question;
+import com.ita.softserveinc.achiever.entity.Subtopic;
+
+/**
+ * @author Taras Hrytsko
+ *
+ */
+@Service
+public class QuestionServiceImpl implements IQuestionService{
+	
+	@Autowired
+	private IQuestionDao questionDao;
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void create(Question entity) {
+		questionDao.create(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public Question update(Question entity) {
+		return questionDao.update(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void delete(Question entity) {
+		questionDao.delete(entity);
+	}
+
+	public Question findById(Long id) {
+		return questionDao.findById(Question.class, id);
+	}
+
+	public List<Question> findAll() {
+		return questionDao.findAll(Question.class);
+	}
+
+}

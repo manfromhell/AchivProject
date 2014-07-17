@@ -1,0 +1,126 @@
+package com.ita.softserveinc.achiever.controller;
+
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.ita.softserveinc.achiever.entity.Question;
+import com.ita.softserveinc.achiever.entity.Subtopic;
+import com.ita.softserveinc.achiever.exception.ElementExistsException;
+import com.ita.softserveinc.achiever.service.IQuestionService;
+import com.ita.softserveinc.achiever.service.ISubtopicService;
+
+/**
+ * @author Taras Hrytsko
+ *
+ */
+@Controller
+public class QuestionController {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(QuestionController.class);
+
+	@Autowired
+	private IQuestionService questionService;
+
+	@Autowired
+	private ISubtopicService subtopicService;
+
+	/**
+	 * @param map
+	 * @return questions
+	 */
+	@RequestMapping("/questions")
+	public String listQuestions(Map<String, Object> map) {
+		map.put("question", new Question());
+		map.put("questionList", questionService.findAll());
+		logger.info("/questions");
+		return "question";
+	}
+
+	/**
+	 * @param map
+	 * @return newquestion
+	 */
+	@RequestMapping("/newquestion")
+	public String newQuestionForm(Map<String, Object> map) {
+		logger.info("/question/new");
+		map.put("question", new Question());
+		map.put("subtopicList", subtopicService.findAll());
+		return "newquestion";
+	}
+
+	/**
+	 * @param question
+	 * @param subtopic
+	 * @param result
+	 * @return questions
+	 */
+	@RequestMapping(value = "/question/addQuestion", method = RequestMethod.POST)
+	public String addQuestion(@ModelAttribute("question") Question question,
+			@ModelAttribute("subtopic") Subtopic subtopic, BindingResult result) {
+		if(result.hasErrors()){
+			return "newquestion";			
+		}
+		question.setSubtopic(subtopicService.findByName(subtopic.getName()));
+			try {
+				questionService.create(question);
+			} catch (ElementExistsException e) {
+				result.reject("question", "such question exists");
+				logger.error("such question exists");
+			}
+		return "redirect:/questions";
+	}
+
+	/**
+	 * @param map
+	 * @return editquestion
+	 */
+	@RequestMapping("/question/edit")
+	public String editQuestionForm(Map<String, Object> map) {
+		logger.info("/question/edit");
+		map.put("subtopicList", subtopicService.findAll());
+		return "editquestion";
+	}
+
+	/**
+	 * @param id
+	 * @return questions
+	 */
+	@RequestMapping("/question/edit/{questionId}")
+	public String editQuestion(@PathVariable("questionId") Long id, @RequestBody  BindingResult result) {
+		Question question = questionService.findById(id);
+		logger.info("updating question "+question);
+		try {
+			questionService.update(question);
+		}catch(ElementExistsException ex){
+			result.reject("question", "such question exists");
+			logger.error("such question exists");
+			return "";
+	}
+		logger.info("");
+		return "redirect:/questions";
+	}
+
+	/**
+	 * @param id
+	 * @return questions
+	 */
+	@RequestMapping("/question/delete/{questionId}")
+	public String deleteQuestion(@PathVariable("questionId") Long id) {
+		Question question = questionService.findById(id);
+		logger.info("delete element "+question);
+		questionService.delete(question);
+		logger.info("delete succesful");
+		return "redirect:/questions";
+	}
+}

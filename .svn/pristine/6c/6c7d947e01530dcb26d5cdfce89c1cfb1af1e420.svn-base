@@ -1,0 +1,116 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="security"%>
+<div class="container">
+	<div class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand"
+					href="<spring:url value="/home" htmlEscape="true"/>">ITAchiever</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class=""><a
+						href="<spring:url value="/home" htmlEscape="true"/>"><spring:message
+								code="label.home" /></a></li>
+					<li class=""><a
+						href="<spring:url value="/about" htmlEscape="true"/>"><spring:message
+								code="label.about" /></a></li>
+
+					<security:authorize access="hasRole('ROLE_ADMIN')">
+						<li class="dropdown"><a data-toggle="dropdown"
+							class="dropdown-toggle" href="#"><spring:message
+									code="label.managers" /> <b class="caret"></b></a>
+							<ul role="menu" class="dropdown-menu">
+								<li><a
+									href="<spring:url value="root/createmanager" htmlEscape="true"/>"><spring:message
+											code="label.addManager" /></a></li>
+
+								<li class="divider"></li>
+								<li><a
+									href="<spring:url value="listofmanagers" htmlEscape="true"/>"><spring:message
+											code="label.managers" /></a></li>
+							</ul></li>
+					</security:authorize>
+
+					<li class=""><a
+						href="<spring:url value="/directions" htmlEscape="true"/>"><spring:message
+								code="label.directions" /></a></li>
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/groups" htmlEscape="true"/>"><spring:message
+									code="label.groups" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="hasRole('ROLE_STUDENT')">
+								<li><a
+									href="<spring:url value="/testing/my-tests" htmlEscape="true"/>"><spring:message
+											code="label.my-tests" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/users" htmlEscape="true"/>"><spring:message
+									code="label.users" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/topics" htmlEscape="true"/>"><spring:message
+									code="label.topics" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/subtopics" htmlEscape="true"/>"><spring:message
+									code="label.subtopics" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/questions" htmlEscape="true"/>"><spring:message
+									code="label.questions" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="hasRole('ROLE_MANAGER')">
+						<li class=""><a
+							href="<spring:url value="/managers" htmlEscape="true"/>"><spring:message
+									code="label.usermanagement" /></a></li>
+					</security:authorize>
+					
+					<!-- Add Schedule in menu -->
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/event" htmlEscape="true"/>">Schedule</a></li>
+					</security:authorize>
+
+					<security:authorize access="! isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/login" htmlEscape="true"/>"><spring:message
+									code="label.signin" /></a></li>
+						<li class=""><a
+							href="<spring:url value="/register" htmlEscape="true"/>"><spring:message
+									code="label.signup" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/logout" htmlEscape="true"/>"><spring:message
+									code="label.signout" /></a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><p>Welcome <security:authentication property="name" /> </p></li>
+					</security:authorize>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

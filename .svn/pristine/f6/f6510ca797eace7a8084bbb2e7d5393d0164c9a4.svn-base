@@ -1,0 +1,60 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import com.ita.softserveinc.achiever.entity.Direction;
+import com.ita.softserveinc.achiever.entity.Group;
+import com.ita.softserveinc.achiever.exception.ElementExistsException;
+import com.ita.softserveinc.achiever.exception.InvalidDateException;
+
+@Component
+public interface IGroupService {
+	
+	/**
+	 * @param entity
+	 * @throws Exception 
+
+	 */
+	void create(Group entity) throws ElementExistsException, InvalidDateException;
+
+	/**
+	 * @param entity
+	 * @return updated element
+	 * @throws InvalidDateException 
+	 * @throws Exception 
+	 */
+	Group update(Group entity) throws ElementExistsException, InvalidDateException;
+
+	/**
+	 * @param entity
+	 */
+	void delete(Group entity);
+
+	/**
+	 * @param id
+	 */
+	// TODO
+	// void delete(Long id);
+
+	/**
+	 * @param id
+	 * @return element
+	 */
+	Group findById(Long id);
+
+	/**
+	 * @return list of elements
+	 */
+	List<Group> findAll();
+
+	List<Group> findByDirection(Direction direction);
+
+	List<Group> findByName(String name);
+
+	boolean isUnique(Group group);
+
+
+}

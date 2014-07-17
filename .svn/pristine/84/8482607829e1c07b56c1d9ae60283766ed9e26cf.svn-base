@@ -1,0 +1,106 @@
+package com.ita.softserveinc.achiever.entity;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.google.common.base.Objects;
+
+/**
+ * 
+ * @author Kopaev Eugene
+ * 
+ */
+@Entity
+@Table(name = "USER_ANSWERS")
+public class UserAnswer extends BaseEntity {
+
+	private static final long serialVersionUID = -7365493536870095334L;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "QUESTION_ID")
+	private Question question;
+
+	@Column(name = "USER_ANSWER")
+	private String userAnswer;
+
+	@Column(name = "ANSWER_GRADE")
+	private double answerGrade;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "QUIZ_RESULT_ID")
+	private QuizResult quizResult;
+
+	public UserAnswer() {
+
+	}
+
+	public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
+	public String getUserAnswer() {
+		return userAnswer;
+	}
+
+	public void setUserAnswer(String userAnswer) {
+		this.userAnswer = userAnswer;
+	}
+
+	public double getAnswerGrade() {
+		return answerGrade;
+	}
+
+	public void setAnswerGrade(double answerGrade) {
+		this.answerGrade = answerGrade;
+	}
+
+	public QuizResult getQuizResult() {
+		return quizResult;
+	}
+
+	public void setQuizResult(QuizResult quizResult) {
+		this.quizResult = quizResult;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(question, userAnswer, answerGrade, quizResult);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+
+		if (this == object) {
+			return true;
+		}
+		if (object == null) {
+			return false;
+		}
+		if (getClass() != object.getClass()) {
+			return false;
+		}
+
+		UserAnswer that = (UserAnswer) object;
+		return Objects.equal(this.question, that.question)
+				&& Objects.equal(this.userAnswer, that.userAnswer)
+				&& Objects.equal(this.answerGrade, that.answerGrade)
+				&& Objects.equal(this.quizResult, that.quizResult);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("question", question.getQuestion())
+				.add("userAnswer", userAnswer).add("answerGrade", answerGrade)
+				.add("quizResult", quizResult.getName()).toString();
+	}
+
+}

@@ -1,0 +1,62 @@
+package com.ita.softserveinc.achiever.springconfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+
+/**
+ * 
+ * Bean configuration without xml declaration
+ *
+ */
+
+//@Configuration
+//public class JpaSpringConfig {
+//
+//	@Value("#{dataSource}")
+//	private javax.sql.DataSource dataSource;
+//	
+//	
+//
+//	@Bean
+//	public java.util.Map<String, Object> jpaProperties() {
+//		Map<String, Object> properties = new HashMap<String, Object>();
+//		properties.put("hibernate.dialect", "${db.dialect}");
+//		properties.put("hbm2ddl.auto", "create");
+//		return properties;
+//	}
+//
+//	@Bean
+//	public JpaVendorAdapter jpaVendorAdapter() {
+//		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+//		hibernateJpaVendorAdapter.setShowSql(true);
+//		hibernateJpaVendorAdapter.setGenerateDdl(true);
+//		hibernateJpaVendorAdapter.setDatabase(Database.HSQL);
+//		return hibernateJpaVendorAdapter;
+//	}
+//
+//	@Bean
+//	public PlatformTransactionManager transactionManager() {
+//		return new JpaTransactionManager(localContainerEntityManagerFactoryBean().getObject());
+//	}
+//
+//	@Bean
+//	public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
+//		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+//		factoryBean.setDataSource(this.dataSource);
+//		factoryBean.setJpaPropertyMap(this.jpaProperties());
+//		factoryBean.setJpaVendorAdapter(this.jpaVendorAdapter());
+//		return factoryBean;
+//	}
+//
+//}
+//

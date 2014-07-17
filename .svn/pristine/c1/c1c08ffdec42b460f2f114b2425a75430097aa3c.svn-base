@@ -1,0 +1,54 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import com.ita.softserveinc.achiever.entity.Role;
+import com.ita.softserveinc.achiever.entity.User;
+import com.ita.softserveinc.achiever.exception.UserExistException;
+
+@Component
+public interface IUserService{
+
+	/**
+	 * @param entity
+	 * @throws Exception
+	 */
+	void create(User entity) throws UserExistException;
+
+	/**
+	 * @param entity
+	 * @return updated element
+	 * @throws Exception
+	 */
+	User update(User entity);
+	/**
+	 * @param entity
+	 */
+	void delete(User entity);
+
+	/**
+	 * @param id
+	 */
+	// TODO
+	// void delete(Long id);
+
+	/**
+	 * @param id
+	 * @return element
+	 */
+	User findById(Long id);
+
+	/**
+	 * @return list of elements
+	 */
+	List<User> findAll();
+
+	User findByLogin(String login);
+
+	List<User> findIfActive(int active, int studentCount);
+	
+	public List<User> getAllByRole(Role role);
+
+}

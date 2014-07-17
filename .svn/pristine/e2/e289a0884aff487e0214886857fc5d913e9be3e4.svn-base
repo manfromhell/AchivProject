@@ -1,0 +1,18 @@
+package com.ita.softserveinc.achiever.exception;
+
+public class UserExistException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	private String pameter;
+
+	public UserExistException(String pameter) {
+		super("User with such login: " + pameter + " already exists");
+		this.pameter = pameter;
+	}
+
+	public String getPameter() {
+		return pameter;
+	}
+
+}

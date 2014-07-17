@@ -1,0 +1,61 @@
+package com.ita.softserveinc.achiever.controller;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ita.softserveinc.achiever.entity.User;
+import com.ita.softserveinc.achiever.service.IRoleService;
+import com.ita.softserveinc.achiever.service.IUserService;
+
+//@Controller
+public class LoginController {
+
+//	@Autowired
+//	private IUserService userService;
+//
+//	@Autowired
+//	private IRoleService roleService;
+//
+//	@ModelAttribute("user")
+//	public User createModel() {
+//		return new User();
+//	}
+//
+//	private static final Logger logger = LoggerFactory
+//			.getLogger(LoginController.class);
+//
+//	@RequestMapping(value = "/login")
+//	public ModelAndView login() {
+//		ModelAndView andView = new ModelAndView("login");
+//		return andView;
+//	}
+//
+//	@RequestMapping(value = "/registration-form", method = RequestMethod.GET)
+//	public ModelAndView registrationForm() {
+//		return new ModelAndView("registration-form");
+//	}
+//
+//	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+//	public ModelAndView registration(@Valid User user,
+//			BindingResult result) {
+//		ModelAndView andView = new ModelAndView("registration-form");
+//		if (result.hasErrors()) {
+//			// by default user.active = 0, user.studentCount = 0
+//				userService.create(user);
+//				logger.info("User registration is successful");
+//		} else {
+//			logger.warn("User Form is Empty");
+//			andView.addObject("UserFormisEmpty", true);
+//		}
+//		return andView;
+//	}
+}

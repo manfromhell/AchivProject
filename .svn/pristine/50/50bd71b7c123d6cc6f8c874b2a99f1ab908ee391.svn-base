@@ -1,0 +1,107 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="security"%>
+<div class="container">
+	<div class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand"
+					href="<spring:url value="/home" htmlEscape="true"/>">ITAchiever</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class=""><a
+						href="<spring:url value="/home" htmlEscape="true"/>">Home</a></li>
+					<li class=""><a
+						href="<spring:url value="/about" htmlEscape="true"/>">About</a></li>
+
+					<security:authorize access="hasRole('ROLE_ADMIN')">
+						<li class="dropdown"><a data-toggle="dropdown"
+							class="dropdown-toggle" href="#">Managers <b class="caret"></b></a>
+							<ul role="menu" class="dropdown-menu">
+								<li><a
+									href="<spring:url value="root/createmanager" htmlEscape="true"/>">Add
+										manager</a></li>
+								<li class="divider"></li>
+								<li><a
+									href="<spring:url value="listofmanagers" htmlEscape="true"/>">List
+										of managers</a></li>
+							</ul></li>
+					</security:authorize>
+
+					<li class=""><a
+						href="<spring:url value="/directions" htmlEscape="true"/>">Directions</a></li>
+					<security:authorize access="hasRole('ROLE_ADMIN')"></security:authorize>
+					<security:authorize
+						access="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN','ROLE_USER')">
+						<li class=""><a
+							href="<spring:url value="/groups" htmlEscape="true"/>">Groups</a></li>
+					</security:authorize>
+
+					<security:authorize access="hasRole('ROLE_STUDENT')">
+						<li class="dropdown"><a data-toggle="dropdown"
+							class="dropdown-toggle" href="#">Tests <b class="caret"></b></a>
+							<ul role="menu" class="dropdown-menu">
+								<li><a
+									href="<spring:url value="/takeTheTest" htmlEscape="true"/>">Take
+										the Test</a></li>
+
+								<li class="divider"></li>
+								<li><a
+									href="<spring:url value="/passedTests" htmlEscape="true"/>">Passed
+										Tests</a></li>
+							</ul></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/users" htmlEscape="true"/>">Users</a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/topics" htmlEscape="true"/>">Topics</a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/subtopics" htmlEscape="true"/>">Subtopics</a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/questions" htmlEscape="true"/>">Questions</a></li>
+					</security:authorize>
+
+					<security:authorize access="hasRole('ROLE_MANAGER')">
+						<li class=""><a
+							href="<spring:url value="/managers" htmlEscape="true"/>">Users
+								Management</a></li>
+					</security:authorize>
+
+					<security:authorize access="! isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/user/login" htmlEscape="true"/>">Sign
+								in</a></li>
+						<li class=""><a
+							href="<spring:url value="/user/registration-form" htmlEscape="true"/>">Sign
+								up</a></li>
+					</security:authorize>
+
+					<security:authorize access="isAuthenticated()">
+						<li class=""><a
+							href="<spring:url value="/logout" htmlEscape="true"/>">Sign
+								out</a></li>
+					</security:authorize>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

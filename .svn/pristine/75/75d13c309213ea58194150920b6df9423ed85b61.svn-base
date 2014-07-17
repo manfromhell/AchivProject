@@ -1,0 +1,36 @@
+package com.ita.softserveinc.achiever.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ita.softserveinc.achiever.entity.User;
+
+@Repository
+public class UserDaoImpl extends GenericDaoImpl<User> implements IUserDao {
+
+	public User findByLogin(String login) {
+		User foundresult = null;
+		foundresult = entityManager
+				.createNamedQuery("User.getByLogin", User.class)
+				.setParameter("login", login).getSingleResult();
+		return foundresult;
+	}
+
+	@Override
+	public void delete(User user) {
+		user.setActive(0);
+	}
+
+	@Override
+	public List<User> findIfActive(Class<User> classUser, int b,
+			int studentCount) {
+		List<User> foundNewResult = null;
+		foundNewResult = entityManager
+				.createNamedQuery("User.getByActiveAndStudentCount", User.class)
+				.setParameter("studentCount", 0).setParameter("active", 0)
+				.getResultList();
+		return foundNewResult;
+	}
+
+}

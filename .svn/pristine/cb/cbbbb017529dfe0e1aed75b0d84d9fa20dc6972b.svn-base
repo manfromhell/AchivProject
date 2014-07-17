@@ -1,0 +1,72 @@
+package com.ita.softserveinc.achiever.controller;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ita.softserveinc.achiever.entity.User;
+import com.ita.softserveinc.achiever.exception.UserExistException;
+import com.ita.softserveinc.achiever.service.IUserService;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(LoginController.class);
+	@Autowired
+	private IUserService userService;
+
+	@ModelAttribute("user")
+	public User createModel() {
+		return new User();
+	}
+	
+	@RequestMapping(value = "/login")
+	public String login() {
+		
+		return "user/login";
+	}
+	
+	@RequestMapping(value = "/registration-form", method = RequestMethod.GET)
+	public ModelAndView registrationForm() {
+		return new ModelAndView("user/registration-form");
+	}
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public String registration(@Valid User user, BindingResult result, Model model) {
+		
+		if (!result.hasErrors()) {
+			// by default user.active = 0, user.studentCount = 0
+			logger.info("User registration is start");
+
+			try {
+				userService.create(user);
+			} catch (UserExistException e) {
+				model.addAttribute("userExistError", true);
+				return "redirect:/user/registration-form";
+			}
+			logger.info("User registration is successful");
+			return "redirect:/" + user.getLogin();
+		} else {
+			logger.info("User registration is unsuccessful");
+			return "user/registration-form";
+		}
+	}
+
+	@RequestMapping(value = "/{login}", method = RequestMethod.GET)
+	public String showUserProfile(@PathVariable String login, Model model) {
+		/*model.addAttribute("user", userService.findByLogin(login));*/
+		return "home";
+	}
+}

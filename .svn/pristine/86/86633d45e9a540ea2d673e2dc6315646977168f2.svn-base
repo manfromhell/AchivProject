@@ -1,0 +1,36 @@
+package com.ita.softserveinc.achiver.tool;
+
+import com.ita.softserveinc.achiever.entity.User;
+import com.ita.softserveinc.achiever.exception.UserDataPatternException;
+
+public class UserDataVerification {
+
+	public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+	public static final String LOGIN_PATTERN = "^[a-z0-9_-]{4,15}$";
+
+	public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+	
+	/**
+	 * @param data
+	 *            User's data
+	 * @return true if match the pattern, if not false
+	 * Checks if user login, password, email if match the pattern
+	 * Login must contain 4 to 15 characters A to Z, a to z, 0 to 9 
+	 * Password must contain 6 to 20 characters A to Z, a to z, 0 to 9, lower and upper case include necessary 
+	 * Email should consist of "..." @ "top-level domain" ...
+	 */
+	public static boolean dataVerification(User user) throws UserDataPatternException {
+		if (!user.getLogin().matches(LOGIN_PATTERN)) {
+			throw new UserDataPatternException("login");
+		}
+		if(!user.getEmail().matches(EMAIL_PATTERN)){
+			throw new UserDataPatternException("e-mail");
+		}
+//		if(!user.getPassword().matches(PASSWORD_PATTERN)){
+//			throw new UserDataPatternException("password");
+//		}
+		return true;
+	}
+}

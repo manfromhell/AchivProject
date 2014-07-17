@@ -1,0 +1,78 @@
+label.title=ITAchiever
+
+label.login=Login
+label.password=Password
+label.confirmPassword=Confirm password
+label.logout=Logout
+label.remember=Remember me
+label.loginerror=Login Error
+
+label.home=Home
+label.admin=Administrator
+label.users=Users
+label.managers=Managers
+label.addManager=Add a new manager
+label.directions=Directions
+label.groups=Groups
+label.questions=Questions
+label.newquestion=New Question
+label.editquestion=Edit Question
+label.topics=Topics
+label.subtopics=Subtopics
+
+label.firstname=First Name
+label.lastname=Last Name
+label.email=E-mail
+label.add=Add
+label.delete=Delete
+label.edit=Edit
+label.set=Set
+
+label.manager=Manager
+label.direction=Direction
+label.topic=Topic
+label.newtopic=New Topic
+label.edittopic=Edit Topic
+label.subtopic=Subtopic
+label.newsubtopic=New Subtopic
+label.editsubtopic=Edit Subtopic
+label.question=Question
+label.answer=Answer
+label.name=Name
+
+label.my-tests=Testing
+
+label.menu=Menu
+label.footer=&copy; sample.net
+Size.direction.name=Must be from 1 to 10 characters!
+Size.group.groupName=Must be from 1 to 10 characters!
+
+Pattern.user.login = Login must contain at least 4 letters
+Pattern.user.password = Password must contain at least 4 Latin letters
+Pattern.user.email = Email must look like example@com.ua
+
+label.home=Home
+label.about=About
+label.usermanagement=Users Management
+label.signin=Sign in
+label.signup=Sign up
+label.signout=Sign out
+
+label.newdirection=New direction
+label.editdirection=Edit direction
+label.newgroup=New group
+label.editgroup=Edit group
+
+label.userEmailExist = User with such email already exists
+label.userLoginExist = User with such login already exists
+label.confirmPasswordFail = This doesn't match the above password.
+label.editgroup=Edit group
+
+label.schedule=Schedule
+label.selectday=Select day
+label.selectgroup=Select group
+label.selecttime=Select time
+label.parsefile=Parse file
+label.start=Start
+label.finish=Finish
+label.apply=Apply

@@ -1,0 +1,94 @@
+package com.ita.softserveinc.achiever.dao;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.NoResultException;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.ita.softserveinc.achiever.entity.Direction;
+import com.ita.softserveinc.achiever.entity.Group;
+
+@Repository
+public class GroupDaoImpl extends GenericDaoImpl<Group> implements IGroupDao {
+	private static final Logger LOG = Logger.getLogger(GroupDaoImpl.class);
+
+
+
+	@Override
+	public List<Group> findByName(String name) {
+		List<Group> groups = null;
+		try {
+			groups = entityManager
+					.createNamedQuery("Group.findByName", Group.class)
+					.setParameter("name", name).getResultList();
+
+		} catch (NoResultException e) {
+			LOG.info("No one group with this name was found");
+
+		} finally {
+			entityManager.close();
+		}
+		return groups;
+	}
+
+	@Override
+	public List<Group> findByDirection(Direction direction) {
+		List<Group> groups = new ArrayList<Group>();
+		try {
+			groups = entityManager
+					.createNamedQuery("Group.findByDirection", Group.class)
+					.setParameter("direction", direction).getResultList();
+
+		} catch (NoResultException e) {
+			LOG.info("No one group in this direction were found");
+
+		} finally {
+			entityManager.close();
+		}
+		return groups;
+
+	}
+
+	@Override
+	public boolean isUnique(Group group) {
+		Group foundGroup = null;
+		try {
+			foundGroup = entityManager
+					.createNamedQuery("Group.getUnique", Group.class)
+					.setParameter("groupName", group.getGroupName())
+					.setParameter("direction", group.getDirection())
+					.getSingleResult();
+		} catch (NoResultException e) {
+			LOG.info("No one group with this name was found");
+
+		} finally {
+			entityManager.close();
+		}
+		if (foundGroup == null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Timestamp parseStartDate(String sdate){
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date=null;
+		try {
+			date = dateFormat.parse(sdate);
+		} catch (ParseException e) {
+			LOG.info("Bad input date");
+		}
+		long time = date.getTime();
+		return new Timestamp(time);
+	}
+
+}

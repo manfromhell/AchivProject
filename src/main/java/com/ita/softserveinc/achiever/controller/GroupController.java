@@ -1,0 +1,137 @@
+package com.ita.softserveinc.achiever.controller;
+
+import java.security.Principal;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.ita.softserveinc.achiever.entity.Direction;
+import com.ita.softserveinc.achiever.entity.Group;
+import com.ita.softserveinc.achiever.entity.User;
+import com.ita.softserveinc.achiever.exception.ElementExistsException;
+import com.ita.softserveinc.achiever.exception.InvalidDateException;
+import com.ita.softserveinc.achiever.service.IDirectionService;
+import com.ita.softserveinc.achiever.service.IGroupService;
+import com.ita.softserveinc.achiever.service.IUserService;
+
+/**
+ * 
+ * @author Andriana
+ *
+ */
+@Controller
+public class GroupController {
+
+	@Autowired
+	private IGroupService groupService;
+
+	@Autowired
+	private IDirectionService directionService;
+	
+	@Autowired
+	private IUserService userService;
+
+	private Group editableGroup;
+
+	@RequestMapping("/groups")
+	public String listGroups(Map<String, Object> map) {
+		map.put("groupList", groupService.findAll());
+		return "group/group";
+	}
+
+	@RequestMapping("/newgroup")
+	public String newGroup(Map<String, Object> map) {
+		map.put("group", new Group());
+		map.put("directionList", directionService.findAll());
+		return "group/newgroup";
+	}
+
+	@RequestMapping(value = "/addGroup", method = RequestMethod.POST)
+	public String addGroup(@Valid @ModelAttribute("group") Group group,
+			BindingResult result,
+			@ModelAttribute("direction") Direction direction,
+			BindingResult result1) {
+		if (result.hasErrors()) {
+			return "redirect:/newgroup";
+		}
+		try {
+			group.setDirection(directionService.findByName(direction.getName()));
+			groupService.create(group);
+		} catch (ElementExistsException e) {
+			result.rejectValue("groupName", "error.group",
+					"this group already exists!");
+			return "redirect:/newgroup";
+		} catch (InvalidDateException e) {
+
+			result.rejectValue("start", "error.group", "date is not correct!");
+			result.rejectValue("end", "error.group", "date is not correct!");
+
+			return "redirect:/newgroup";
+		}
+		return "redirect:/groups";
+	}
+
+	@RequestMapping(value = "/group/edit/{groupId}")
+	public String editGroup(@PathVariable("groupId") Long id,
+			Map<String, Object> map) {
+		editableGroup = groupService.findById(id);
+		map.put("group", groupService.findById(id));
+		map.put("directionList", directionService.findAll());
+		return "group/editgroup";
+	}
+
+	@RequestMapping(value = "/group/edit/editGroup", method = RequestMethod.POST)
+	public String editGroup2(@Valid @ModelAttribute("group") Group group,
+			@ModelAttribute("direction") Direction direction,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			return "redirect:/editgroup";
+		}
+		if (group.getGroupName().equals(editableGroup.getGroupName())
+				&& (group.getDirection().equals(editableGroup.getDirection()))) {
+			return "redirect:/groups";
+		}
+		try {
+			editableGroup.setGroupName(group.getGroupName());
+			editableGroup.setDirection(directionService.findByName(direction
+					.getName()));
+			groupService.update(editableGroup);
+		} catch (ElementExistsException e) {
+			result.rejectValue("name", "error.group",
+					"this group already exists!");
+			return "redirect:/editgroup";
+		} catch (InvalidDateException e) {
+			result.rejectValue("start", "error.group", "date is not correct!");
+			result.rejectValue("end", "error.group", "date is not correct!");
+			return "redirect:/newgroup";
+		}
+		return "redirect:/groups";
+	}
+
+	@RequestMapping("/group/delete/{groupId}")
+	public String deleteGroup(@PathVariable("groupId") Long id) {
+		Group group = groupService.findById(id);
+		groupService.delete(group);
+		return "redirect:/groups";
+	}
+	
+	@RequestMapping("/group/apply/{groupId}")
+	public String applyToGroup(@PathVariable("groupId") Long id, Principal principal) {
+		Group group = groupService.findById(id);
+		String login = principal.getName();
+		User user = userService.findByLogin(login);
+		user.setGroup(group);
+		userService.update(user);
+		return "group/successApply";
+	}
+
+
+}

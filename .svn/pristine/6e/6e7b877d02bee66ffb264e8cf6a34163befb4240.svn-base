@@ -1,0 +1,85 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ita.softserveinc.achiever.dao.IGroupDao;
+import com.ita.softserveinc.achiever.entity.Direction;
+import com.ita.softserveinc.achiever.entity.Group;
+import com.ita.softserveinc.achiever.exception.ElementExistsException;
+import com.ita.softserveinc.achiever.exception.InvalidDateException;
+import com.ita.softserveinc.achiever.tool.DateValidator;
+
+@Service
+public class GroupServiceImpl implements IGroupService {
+
+	@Autowired
+	private IGroupDao groupDao;
+
+	@Autowired
+	private DateValidator dateValidator;
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void create(Group entity) throws ElementExistsException,
+			InvalidDateException {
+		if (isUnique(entity) == false) {
+			throw new ElementExistsException();
+		}
+		boolean vStart = dateValidator.validate(entity.getStart());
+		boolean vEnd = dateValidator.validate(entity.getEnd());
+		if (vStart && vEnd) {
+			groupDao.create(entity);
+		} else {
+			throw new InvalidDateException();
+		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Group update(Group entity) throws ElementExistsException, InvalidDateException {
+		if (isUnique(entity) == false) {
+			throw new ElementExistsException();
+		}
+		boolean vStart = dateValidator.validate(entity.getStart());
+		boolean vEnd = dateValidator.validate(entity.getEnd());
+		if (vStart && vEnd) {
+			return groupDao.update(entity);
+		}
+		else {
+			throw new InvalidDateException();
+		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void delete(Group entity) {
+		groupDao.delete(entity);
+	}
+
+	public Group findById(Long id) {
+		return groupDao.findById(Group.class, id);
+	}
+
+	public List<Group> findAll() {
+		return groupDao.findAll(Group.class);
+	}
+
+	@Override
+	public List<Group> findByName(String name) {
+		return groupDao.findByName(name);
+	}
+
+	@Override
+	public boolean isUnique(Group group) {
+		return groupDao.isUnique(group);
+	}
+
+	@Override
+	public List<Group> findByDirection(Direction direction) {
+		return groupDao.findByDirection(direction);
+	}
+
+}

@@ -1,0 +1,104 @@
+package com.ita.softserveinc.achiever.controller;
+
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ita.softserveinc.achiever.entity.Topic;
+import com.ita.softserveinc.achiever.service.ITopicService;
+
+/**
+ * @author Taras Hrytsko
+ *
+ */
+@Controller
+public class TopicController {
+
+	@Autowired
+	private ITopicService topicService;
+	
+	private Topic editableTopic;
+
+	/**
+	 * @param map
+	 * @return topics
+	 */
+	@RequestMapping("/topics")
+	public String listQuestions(Map<String, Object> map) {
+		map.put("topic", new Topic());
+		map.put("topicList", topicService.findAll());
+		return "topic/topic";
+	}
+
+	/**
+	 * @param map
+	 * @return newtopic
+	 */
+	@RequestMapping("/newtopic")
+	public String newTopic(Map<String, Object> map) {
+		map.put("topic", new Topic());
+//		map.put("topicList", topicService.findAll());
+		return "topic/newtopic";
+	}
+
+	/**
+	 * @param topic
+	 * @param result
+	 * @return subtopics
+	 */
+	@RequestMapping(value = "/addTopic", method = RequestMethod.POST)
+	public String addSubtopic(@ModelAttribute("topic") Topic topic, BindingResult result) {
+		try {
+			topicService.create(topic);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/topics";
+	}
+
+	@RequestMapping(value = "/topic/edit/{topicId}")
+	public String editTopic(@PathVariable("topicId") Long id, Map<String, Object> map) {
+		map.put("topic", topicService.findById(id));
+		editableTopic = topicService.findById(id);
+		return "topic/edittopic";
+	}
+	
+	@RequestMapping(value = "/topic/edit/editTopic", method = RequestMethod.POST)
+	public ModelAndView editTopic2(@Valid @ModelAttribute("topic") Topic topic, BindingResult result) {
+		if(result.hasErrors()) {
+	    	return new ModelAndView("topic/edittopic");
+	    }
+		if (topic.getTopicName().equals(editableTopic.getTopicName())){
+			return new ModelAndView("redirect:/topics");
+		}
+		try{
+		editableTopic.setTopicName(topic.getTopicName());
+		topicService.update(editableTopic);
+		}catch(Exception e){
+			result.rejectValue("name", "error.topic", "this topic already exists");
+			return new ModelAndView("edittopic");
+		}
+		return new ModelAndView("redirect:/topics");
+	}
+
+
+	/**
+	 * @param id
+	 * @return homepage
+	 */
+	@RequestMapping("/topic/delete/{topicId}")
+	public String deletetopic(@PathVariable("topicId") Long id) {
+		Topic topic = topicService.findById(id);
+		topicService.delete(topic);
+		return "redirect:/topics";
+	}
+}

@@ -1,0 +1,176 @@
+package com.ita.softserveinc.achiever.entity;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import com.google.common.base.Objects;
+
+/**
+ * @author Ruslan Didyk
+ */
+@NamedQueries({
+		@NamedQuery(name = "Group.findByName", query = "SELECT g FROM Group g WHERE g.groupName = :name"),
+		@NamedQuery(name="Group.getUnique", query="SELECT g FROM Group g JOIN g.direction d WHERE g.groupName=:groupName AND g.direction=:direction"),
+		@NamedQuery(name = "Group.findByDirection", query = "SELECT g FROM Group g JOIN g.direction d WHERE g.direction = :direction") })
+@Entity
+@Table(name = "GROUPS")
+public class Group extends BaseEntity {
+	
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "NAME", nullable=false)
+	@Size(min=1, max=10, message="Must be from 1 to 10 chars")
+	private String groupName;
+	
+	@Column(name= "STARTS")
+	private String start;
+	
+	@Column(name = "ENDS")
+	private String end;
+	
+	@OneToMany(mappedBy = "group")
+	private List<User> users = new ArrayList<User>();
+	
+	@ManyToOne
+	@JoinColumn(name = "DIRECTION_ID")
+	private Direction direction;
+	
+	public Group() {
+	}
+	
+	public Group(String groupName) {
+		this.groupName = groupName;
+	}
+	
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+
+
+	/**
+	 * @return users (type = Set<User>) users in Group
+	 */
+	public List<User> getUsers() {
+		return Collections.unmodifiableList(this.users);
+	}
+
+	/**
+	 * @param user
+	 *            (type = User) set new user in Group
+	 */
+	public void addUser(User user) {
+		this.users.add(user);
+	}
+
+	/**
+	 * @param manyUsers
+	 *            (type = Set<User>) set many Users in Group
+	 */
+	public void addUsers(Set<User> manyUsers) {
+		this.users.addAll(manyUsers);
+	}
+
+	/**
+	 * @param user
+	 *            (type = User) delete user from Group
+	 */
+	public void deleteUser(User user) {
+		this.users.remove(user);
+	}
+
+	/**
+	 * @param manyUsers
+	 *            (type = Set<User>) delete some users from Group
+	 */
+	public void deleteUsers(Set<User> manyUsers) {
+		this.users.removeAll(manyUsers);
+	}
+
+	/**
+	 * delete All users from Group
+	 */
+	public void deleteAllUsers() {
+		this.users.clear();
+	}
+
+	/**
+	 * @return direction (type = Direction) Group of direction
+	 */
+	public Direction getDirection() {
+		return direction;
+	}
+
+	/**
+	 * @param direction
+	 *            (type = Direction) set direction in Group
+	 */
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
+	}
+
+	/**
+	 * @return result (type - int) hashCode of Group.class
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.groupName, this.direction);
+	}
+
+	/**
+	 * @param obj
+	 *            (type = Object) object whitch we want check for equality
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Group that = (Group) obj;
+		return Objects.equal(this.groupName, that.groupName)
+				&& Objects.equal(this.direction, that.direction);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("groupName", this.groupName)
+				.add("direction", this.direction.getName()).toString();
+	}
+
+}

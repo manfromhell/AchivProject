@@ -1,0 +1,42 @@
+package com.ita.softserveinc.achiever.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ita.softserveinc.achiever.dao.IQuizResultDao;
+import com.ita.softserveinc.achiever.entity.QuizResult;
+
+@Service
+public class QuizResultServiceImpl implements IQuizResultService{
+	
+	@Autowired
+	private IQuizResultDao quizResultDao;
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void create(QuizResult entity) {
+		quizResultDao.create(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public QuizResult update(QuizResult entity) {
+		return quizResultDao.update(entity);
+	}
+
+	@Transactional (propagation = Propagation.REQUIRED)
+	public void delete(QuizResult entity) {
+		quizResultDao.delete(entity);
+	}
+
+	public QuizResult findById(Long id) {
+		return quizResultDao.findById(QuizResult.class, id);
+	}
+
+	public List<QuizResult> findAll() {
+		return quizResultDao.findAll(QuizResult.class);
+	}
+
+}

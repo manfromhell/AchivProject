@@ -1,0 +1,64 @@
+package com.ita.softserveinc.achiever.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.ita.softserveinc.achiever.entity.Topic;
+import com.ita.softserveinc.achiever.service.ITopicService;
+
+/**
+ * @author Taras Hrytsko
+ *
+ */
+@Controller
+public class TopicController {
+
+	@Autowired
+	private ITopicService topicService;
+
+	/**
+	 * @param map
+	 * @return topics
+	 */
+	@RequestMapping("/topics")
+	public String listQuestions(Map<String, Object> map) {
+		map.put("topic", new Topic());
+		map.put("topicList", topicService.findAll());
+		return "topic";
+	}
+
+	/**
+	 * @param topic
+	 * @param result
+	 * @return homepage
+	 */
+	@RequestMapping(value = "/topics/add", method = RequestMethod.POST)
+	public String addContact(@ModelAttribute("topic") Topic topic,
+			BindingResult result) {
+		try {
+			topicService.create(topic);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return "redirect:/topics";
+	}
+
+	/**
+	 * @param id
+	 * @return homepage
+	 */
+	@RequestMapping("/topics/delete/{topicId}")
+	public String deletetopic(@PathVariable("topicId") Long id) {
+		//TODO delete by id
+		//topicService.remove(id);
+		return "redirect:/topics";
+	}
+}
